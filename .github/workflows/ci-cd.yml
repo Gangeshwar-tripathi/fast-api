@@ -20,9 +20,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest-asyncio
+          pip install jupyterlab ipykernel httpx pytest-asyncio
 
       - name: Run tests
         run: |
           cd fastapi-app
           export PYTHONPATH=$PYTHONPATH:$PWD
           pytest -q
+
+      - name: Run notebooks
+        run: |
+          pip install nbconvert
+          jupyter nbconvert --to notebook --execute notebooks/test_notebook.ipynb --output executed_test_notebook.ipynb

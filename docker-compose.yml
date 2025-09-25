@@ -1,26 +1,26 @@
-version: "3.8"
-
 services:
-  db:
-    image: postgres:15
-    environment:
-      POSTGRES_USER: fastapi
-      POSTGRES_PASSWORD: fastapi
-      POSTGRES_DB: fastapidb
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
-  web:
+  fastapi-app:
     build: .
-    command: uvicorn fastapi-app.app.main:app --host 0.0.0.0 --port 80 --reload
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     volumes:
-      - ./app:/app/app
+      - fastapi_code:/app   # ephemeral volume
     ports:
-      - "9000:80"
-    depends_on:
-      - db
+      - "9000:8000"
+
+  jupyter:
+    image: jupyter/base-notebook
+    volumes:
+      - fastapi_code:/app   # same ephemeral volume
+    ports:
+      - "8889:8888"
+    stdin_open: true
+    tty: true
+    command: >
+      jupyter lab
+      --ip=0.0.0.0
+      --port=8888
+      --allow-root
+      --no-browser
 
 volumes:
-  pgdata:
+  fastapi_code:

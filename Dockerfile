@@ -1,35 +1,26 @@
-# Use official Python slim image
 FROM python:3.11-slim
 
+WORKDIR /app
 
-# Create app directory
-WORKDIR /fastapi-app/app
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
 
+# Upgrade pip
+RUN python -m pip install --upgrade pip
 
-# system deps (if needed)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-build-essential \
-libpq-dev \
-&& rm -rf /var/lib/apt/lists/*
-
-
-# copy and install requirements
-COPY requirements.txt ./
+# Install Python dependencies
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy original code into image
+COPY . /app
 
-# copy source
-COPY ./app ./app
+# Expose ports for FastAPI and Jupyter
+EXPOSE 8000 8888
 
-
-# create a non-root user (best practice)
-RUN useradd --create-home appuser && chown -R appuser /app
-USER appuser
-
-
-# port
-EXPOSE 80
-
-
-# Start using Gunicorn + Uvicorn workers for concurrency
-CMD ["gunicorn", "app.main:app", "-k", "uvicorn.workers.UvicornWorker", "-w", "2", "-b", "0.0.0.0:80", "--access-logfile", "-"]
+# Use uvicorn with reload for FastAPI
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

@@ -14,12 +14,11 @@ class Item(BaseModel):
 
 # In-memory store for example. Replace with DB access.
 ITEMS =ITEMS = {
-    i: {
-        "id": i,
-        "name": f"Item {i}",
-        "description": f"Description for item {i}"
+    1: {
+        "id": 1,
+        "name": f"Item",
+        "description": f"Description for itertyusdfgkle"
     }
-    for i in range(1, 10)
 }
 
 @router.get("/", response_model=List[Item])
