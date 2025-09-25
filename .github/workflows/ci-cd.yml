@@ -22,5 +22,6 @@ jobs:
 
       - name: Run tests
         run: |
-          export PYTHONPATH=$PYTHONPATH:$PWD/app
+          cd fastapi-app
+          export PYTHONPATH=$PYTHONPATH:$PWD
           pytest -q
