@@ -15,7 +15,7 @@ allow_headers=["*"],
 )
 
 
-app.include_router(items.router, prefix="/api/v1/items", tags=["items"])
+app.include_router(items.router, prefix="/api/v1/items/v2", tags=["items"])
 
 
 @app.get("/health")

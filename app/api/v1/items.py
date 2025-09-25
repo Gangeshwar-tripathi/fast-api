@@ -17,7 +17,7 @@ ITEMS =ITEMS = {
     1: {
         "id": 1,
         "name": f"Item",
-        "description": f"Description for itertyusdfgkle"
+        "description": f"Description for Dev Pandey"
     }
 }
 
